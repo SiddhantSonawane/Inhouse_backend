@@ -7,13 +7,11 @@ import errorMiddleware from './middleware/Error.js'
 app.use(express.json());
 
 // Route imports
-import dummyroute from './routes/basic_route.js'
-import bookPRoute from './routes/2_book_publications.js'
+import teachersRoute from './routes/teachers.routes.js'
 
 
 // using routes
-app.use("/api/v1", dummyroute);
-app.use("/api/v1/book-pb", bookPRoute);
+app.use("/api/v1/teacher", teachersRoute);
 
 
 // this middleware should be used at the last
