@@ -23,6 +23,7 @@ class BaseModel {
       .map(() => "?")
       .join(", ");
     const values = Object.values(newData);
+    console.log("placeholders are : ", placeholders);
 
     const query = `INSERT INTO ${this.tableName} VALUES (${placeholders})`;
     console.log(query)
