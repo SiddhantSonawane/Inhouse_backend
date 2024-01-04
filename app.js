@@ -1,10 +1,12 @@
 import express from "express";
 const app = express();
+import cors from 'cors';
 import 'dotenv/config'
 import errorMiddleware from './middleware/Error.js'
 
 
 app.use(express.json());
+app.use(cors());
 
 // Route imports
 import teachersRoute from './routes/teachers.routes.js'
