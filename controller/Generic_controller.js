@@ -20,6 +20,7 @@ class GenericController {
   getByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const { username } = req.params;
+    // console.log("USERNAME IS : ", username);
     const data = await modelInstance.getByUsername(username);
     res.json({ success: true, data: data[0] });
   });
