@@ -73,7 +73,7 @@ class BaseModel {
     }
   }
 
-  async filterQuery(filters, orderBy, limit) {
+  async filterQuery(filters, orderBy, limit, startDate, endDate, dateColumn) {
     let query = `SELECT * FROM ${this.tableName}`;
   
     if (filters && Object.keys(filters).length > 0) {
@@ -87,18 +87,26 @@ class BaseModel {
         }
       });
     }
+
+    // Adding dynamic date filtering if start and end dates are provided
+    if (startDate && endDate && dateColumn) {
+      if (filters && Object.keys(filters).length > 0) {
+        query += ' AND ';
+      } else {
+        query += ' WHERE ';
+      }
+      query += `${dateColumn} BETWEEN '${startDate}' AND '${endDate}'`;
+    }
   
-    // adding ORDER BY clause
+    // Adding ORDER BY clause
     if (orderBy) {
       query += ` ORDER BY ${orderBy} `;
     }
   
-    // adding LIMIT clause
+    // Adding LIMIT clause
     if (limit) {
       query += ` LIMIT ${limit} `;
     }
-
-    // console.log(query);
 
     try {
       const result = await sql.query(query);
@@ -106,7 +114,8 @@ class BaseModel {
     } catch (error) {
       throw new Error(`Error querying data: ${error.message}`);
     }
-  }
+}
+
   
 
   // You can have more specific methods 
