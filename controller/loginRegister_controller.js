@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 
 export const register = async (req, res) => {
+    
     const { name, gmail, password } = req.body;
 
     try {
@@ -57,13 +58,26 @@ export const login = async (req, res) => {
 
     try {
         const results = await pool.query('SELECT * FROM register WHERE Email = ? AND Password = ?', [gmail, password]);
+        console.log("Results are : ",results[0][0]);
         if (results[0].length > 0) {
-            res.status(200).send('Login successful');
+            res.status(200).send({
+                success:true,
+                message:'Login Successful',
+                data:results[0][0]
+            });
         } else {
-            res.status(401).send('Invalid credentials');
+            res.status(401).send({
+                success:false,
+                message:'Invalid credentials',
+                data:'Invalid credentials'
+            });
         }
     } catch (err) {
             console.log(err);
-            res.status(500).send('Server Error');
+            res.status(500).send({
+                success:false,
+                message:'Error in login',
+                data:err.message
+            });
     }
 };

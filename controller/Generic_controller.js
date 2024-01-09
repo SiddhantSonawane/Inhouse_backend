@@ -20,6 +20,7 @@ class GenericController {
   getByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const { username } = req.params;
+    // console.log("USERNAME IS : ", username);
     const data = await modelInstance.getByUsername(username);
     res.json({ success: true, data: data[0] });
   });
@@ -32,17 +33,19 @@ class GenericController {
   });
 
   updateByUsername = catchAsyncErrors(async (req, res) => {
+
     const modelInstance = new this.Model();
-    const { username } = req.query;
+    const { username, T_ID } = req.query;
+
     const updatedFields = req.body;
-    const result = await modelInstance.update(username, updatedFields);
+    const result = await modelInstance.update(username, T_ID, updatedFields);
     res.json({ success: true, data: result });
   });
 
   deleteByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
-    const { username } = req.query;
-    const result = await modelInstance.deleteByUsername(username);
+    const { username, T_ID } = req.query;
+    const result = await modelInstance.deleteByUsername(username, T_ID);
     res.json({ success: true, data: result });
   });
 }

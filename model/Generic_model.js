@@ -23,6 +23,7 @@ class BaseModel {
       .map(() => "?")
       .join(", ");
     const values = Object.values(newData);
+    console.log("placeholders are : ", placeholders);
 
     const query = `INSERT INTO ${this.tableName} VALUES (${placeholders})`;
     console.log(query)
@@ -34,7 +35,9 @@ class BaseModel {
     }
   }
 
-  async update(username, updatedFields) {
+  async update(username, T_ID, updatedFields) {
+
+
     const setValues = [];
     const setFields = [];
 
@@ -47,8 +50,8 @@ class BaseModel {
 
     const query = `UPDATE ${this.tableName} SET ${setFields.join(
       ", "
-    )} WHERE Username = ?`;
-    setValues.push(username);
+    )} WHERE Username = ? and T_ID = ?`;
+    setValues.push(username, T_ID);
 
     try {
       const result = await sql.query(query, setValues);
@@ -58,11 +61,11 @@ class BaseModel {
     }
   }
 
-  async deleteByUsername(username) {
-    const query = `DELETE FROM ${this.tableName} WHERE Username = ?`;
+  async deleteByUsername(username, T_ID) {
+    const query = `DELETE FROM ${this.tableName} WHERE Username = ? and T_ID = ?`;
 
     try {
-      const result = await sql.query(query, [username]);
+      const result = await sql.query(query, [username, T_ID]);
       return result;
     } catch (error) {
       throw new Error(`Error deleting data: ${error.message}`);
