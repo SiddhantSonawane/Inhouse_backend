@@ -7,6 +7,4 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise() // so that we can use async await
 
-  
 export default pool
-

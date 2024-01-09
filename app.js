@@ -4,7 +4,7 @@ import cors from 'cors';
 import 'dotenv/config'
 import errorMiddleware from './middleware/Error.js'
 
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
@@ -14,6 +14,12 @@ import loginRegisterRoutes from './routes/loginRegisterRoutes.js';
 
 
 // using routes
+
+// Simple middleware to log incoming requests
+// app.use((req, res, next) => {
+//     console.log(`Received request: ${req.method} ${req.url} `);
+//     next();
+// });
 app.use("/api/v1/teacher", teachersRoute);
 app.use("/api/v1/auth", loginRegisterRoutes);
 

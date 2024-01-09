@@ -73,6 +73,42 @@ class BaseModel {
     }
   }
 
+  async filterQuery(filters, orderBy, limit) {
+    let query = `SELECT * FROM ${this.tableName}`;
+  
+    if (filters && Object.keys(filters).length > 0) {
+      query += ' WHERE ';
+      const filterKeys = Object.keys(filters);
+      filterKeys.forEach((key, index) => {
+        query += `${key} = '${filters[key]}'`;
+  
+        if (index !== filterKeys.length - 1) {
+          query += ' AND ';
+        }
+      });
+    }
+  
+    // adding ORDER BY clause
+    if (orderBy) {
+      query += ` ORDER BY ${orderBy} `;
+    }
+  
+    // adding LIMIT clause
+    if (limit) {
+      query += ` LIMIT ${limit} `;
+    }
+
+    // console.log(query);
+
+    try {
+      const result = await sql.query(query);
+      return result[0];
+    } catch (error) {
+      throw new Error(`Error querying data: ${error.message}`);
+    }
+  }
+  
+
   // You can have more specific methods 
   // for each table in their respective models.
 }

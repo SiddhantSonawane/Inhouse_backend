@@ -8,7 +8,7 @@ export class ResearchPublications extends BaseModel {
 }
 
 // BookPublications Model
-export class BookPublications extends BaseModel {
+export class BookPublications extends BaseModel { 
   constructor() {
     super('2_book_publication');
   }

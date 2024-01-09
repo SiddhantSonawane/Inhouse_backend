@@ -51,6 +51,26 @@ class GenericController {
     const result = await modelInstance.deleteByUsername(username, T_ID);
     res.json({ success: true, data: result });
   });
+
+  filterData = catchAsyncErrors(async(req, res) => {
+    const modelInstance = new this.Model();
+    // console.log("req query is: ")
+
+    const { orderBy, limit, ...filters } = req.query;
+
+    console.log("filters is: ", filters)
+    // const result = await modelInstance.filterQuery(filters)
+    const result = await modelInstance.filterQuery(
+      filters,
+      orderBy, 
+      limit
+    );
+
+    // console.log("result from filterdata: ", result)
+
+    res.json({ success: true, data: result })
+  })
+
 }
 
 export default GenericController;
