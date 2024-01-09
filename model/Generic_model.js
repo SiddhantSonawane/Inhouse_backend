@@ -8,6 +8,7 @@ class BaseModel {
 
   async getAll() {
     const query = `SELECT * FROM ${this.tableName}`;
+    console.log("Query is : ", query);
     return await sql.query(query);
   }
 

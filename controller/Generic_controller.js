@@ -34,9 +34,12 @@ class GenericController {
 
   updateByUsername = catchAsyncErrors(async (req, res) => {
 
+    console.log("Update controller hit");
+
     const modelInstance = new this.Model();
     const { username, T_ID } = req.query;
 
+    console.log("username is : ", username);
     const updatedFields = req.body;
     const result = await modelInstance.update(username, T_ID, updatedFields);
     res.json({ success: true, data: result });
