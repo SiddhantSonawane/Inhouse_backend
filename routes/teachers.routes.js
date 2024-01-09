@@ -3,7 +3,8 @@ const router = express.Router();
 // import BookPublicationsController from '../controller/2_bp.controller.js'; // Import your specific controller
 import {
     BookPublicationsController, 
-    ReasearchPublicationsController, FacultyConferencePublicationsController, 
+    ReasearchPublicationsController, 
+    FacultyConferencePublicationsController, 
     GrantsController, 
     ConsultancyReportController, 
     PatentPublicationsController, 
