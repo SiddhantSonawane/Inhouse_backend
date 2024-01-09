@@ -4,7 +4,6 @@ import cors from 'cors';
 import 'dotenv/config'
 import errorMiddleware from './middleware/Error.js'
 
-
 app.use(express.json());
 app.use(cors());
 
