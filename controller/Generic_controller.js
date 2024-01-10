@@ -83,42 +83,7 @@ class GenericController {
     }
   } 
 
-  //fetch all the tables means the tables names 
-  getAllTables = async(req, res) => {
-    try {
-      const modelInstance = new this.Model();
-      const data = await modelInstance.getAllTables();
-      res.json({ success: true, data: data[0] });
-    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
-    }
-  }
-
-  // In your controller file
-getUserData = async (req, res) => {
-  try {
-    const { username, selectedTables } = req.query;
-    console.log("Received request with parameters:", req.query);
-
-    // Validate that selectedTables is an array to prevent SQL injection
-    if (!Array.isArray(selectedTables)) {
-      return res.status(400).json({ success: false, message: "Invalid input" });
-    }
-
-    const modelInstance = new this.Model();
-    const userData = {};
-
-    // Fetch data from each selected table
-    for (const table of selectedTables) {
-      const data = await modelInstance.getDataForUser(username, table);
-      userData[table] = data[0];
-    }
-
-    res.json({ success: true, data: userData });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+  // basic func ends
 
 }
 

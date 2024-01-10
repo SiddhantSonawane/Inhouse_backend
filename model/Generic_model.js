@@ -38,7 +38,6 @@ class BaseModel {
 
   async update(username, T_ID, updatedFields) {
 
-
     const setValues = [];
     const setFields = [];
 
@@ -116,26 +115,6 @@ class BaseModel {
     }
 }
 
-  //fetching all the users listing them
-  async getAllUsers() {
-    const query = `SELECT Username FROM ${this.tableName}`;
-    console.log("Query is : ", query);
-    return await sql.query(query);
-  }
-
-  //get all table names
-  async getAllTables() {
-    const query = `SHOW TABLES;`;
-    console.log("Query is : ", query);
-    return await sql.query(query);
-  }
-
-  //get all the data of the user according to selected table names
-  async getDataForUser(username, tableName) {
-    const query = `SELECT * FROM ${tableName} WHERE Username = '${username}'`;
-    console.log("Query is : ", query);
-    return await sql.query(query, [username]);
-  }
 
   
 

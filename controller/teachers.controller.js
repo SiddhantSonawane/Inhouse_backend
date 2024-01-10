@@ -19,7 +19,7 @@ import {
   Faculty_Achievements,
   Industrial_Visits,
   Contribution_To_BOS,
-  LoginDetails
+  AllUsernames
 } from '../model/teachers.model.js';
 
 // BookPublications Controller
@@ -150,8 +150,8 @@ export class Contribution_To_BOSController extends GenericController {
   }
 }
 
-export class LoginDetailsController extends GenericController {
+export class AllUsernamesController extends GenericController {
   constructor() {
-    super(LoginDetails)
+    super(AllUsernames)
   }
 }

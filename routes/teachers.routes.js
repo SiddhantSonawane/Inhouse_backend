@@ -20,7 +20,7 @@ import {
     Faculty_AchievementsController,
     Industrial_VisitsController,
     Contribution_To_BOSController,
-    LoginDetailsController
+    AllUsernamesController
 } from '../controller/teachers.controller.js';
 
 // Research Publications Routes
@@ -185,10 +185,8 @@ router.delete("/contribution-bos/remove", controller18.deleteByUsername);
 router.put("/contribution-bos/update", controller18.updateByUsername);
 router.post("/contribution-bos/filter", controller18.filterData);
 
-const controller19 = new LoginDetailsController();
+const controller19 = new AllUsernamesController();
 
-router.get("/login-details/usernames", controller19.getAllUsers)
-router.get("/login-details/tables", controller19.getAllTables)
-router.post("/login-details/get-user-data", controller19.getUserData)
+router.get("/getUsernames/usernames", controller19.getAllUsers)
 
 export default router;
