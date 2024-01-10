@@ -73,6 +73,19 @@ class GenericController {
 
   //done
 
+  //fetch usernames controller method
+  getAllUsers = async(req, res) => {
+    try {
+      const modelInstance = new this.Model();
+      const data = await modelInstance.getAllUsers();
+      res.json({ success: true, data: data[0] });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  } 
+
+  // basic func ends
+
 }
 
 export default GenericController;

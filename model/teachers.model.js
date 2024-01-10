@@ -129,5 +129,13 @@ export class Industrial_Visits extends BaseModel {
 export class Contribution_To_BOS extends BaseModel {
   constructor() {
     super('18_contrtobos')
-  }
+  } 
+}
+
+//fetch all usernames 
+
+export class AllUsernames extends BaseModel {
+    constructor() {
+      super('login_details')
+    }
 }

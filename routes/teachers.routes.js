@@ -19,7 +19,8 @@ import {
     Techfest_OrganizedController,
     Faculty_AchievementsController,
     Industrial_VisitsController,
-    Contribution_To_BOSController
+    Contribution_To_BOSController,
+    AllUsernamesController
 } from '../controller/teachers.controller.js';
 
 // Research Publications Routes
@@ -183,5 +184,9 @@ router.post("/contribution-bos/create-new", controller18.create);
 router.delete("/contribution-bos/remove", controller18.deleteByUsername);
 router.put("/contribution-bos/update", controller18.updateByUsername);
 router.post("/contribution-bos/filter", controller18.filterData);
+
+const controller19 = new AllUsernamesController();
+
+router.get("/getUsernames/usernames", controller19.getAllUsers)
 
 export default router;
