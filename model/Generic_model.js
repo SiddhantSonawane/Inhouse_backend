@@ -24,7 +24,6 @@ class BaseModel {
       .map(() => "?")
       .join(", ");
     const values = Object.values(newData);
-    console.log("placeholders are : ", placeholders);
 
     const query = `INSERT INTO ${this.tableName} VALUES (${placeholders})`;
     console.log(query)
@@ -115,8 +114,6 @@ class BaseModel {
       throw new Error(`Error querying data: ${error.message}`);
     }
 }
-
-  
 
   // You can have more specific methods 
   // for each table in their respective models.

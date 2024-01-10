@@ -30,8 +30,8 @@ export const verify = async (req, res) => {
     const { gmail, password } = req.body;
 
     try {
+        const teacher = await pool.query('SELECT * FROM login_details WHERE Username = ? AND Password = ?', [gmail, password]);
         const student = await pool.query('SELECT * FROM student_dummy WHERE Username = ? AND Password = ?', [gmail, password]);
-        const teacher = await pool.query('SELECT * FROM teacher_dummy WHERE Username = ? AND Password = ?', [gmail, password]);
 
         if (student[0].length > 0 || teacher[0].length > 0) {
             res.status(200).send('Email and Password verified');
@@ -43,7 +43,6 @@ export const verify = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
-
 
 export const checkRegistration = async (req, res) => {
     const email = req.params.email;
