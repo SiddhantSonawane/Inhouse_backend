@@ -18,7 +18,8 @@ import {
   Techfest_Organized,
   Faculty_Achievements,
   Industrial_Visits,
-  Contribution_To_BOS
+  Contribution_To_BOS,
+  LoginDetails
 } from '../model/teachers.model.js';
 
 // BookPublications Controller
@@ -146,5 +147,11 @@ export class Industrial_VisitsController extends GenericController {
 export class Contribution_To_BOSController extends GenericController {
   constructor() {
     super(Contribution_To_BOS)
+  }
+}
+
+export class LoginDetailsController extends GenericController {
+  constructor() {
+    super(LoginDetails)
   }
 }
