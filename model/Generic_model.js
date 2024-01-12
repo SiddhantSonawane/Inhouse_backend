@@ -114,12 +114,9 @@ class BaseModel {
     }
 }
 
-<<<<<<< HEAD
-=======
 
   
 
->>>>>>> 5740573a568dc290fc08cf224205a13988eead69
   // You can have more specific methods 
   // for each table in their respective models.
 }
