@@ -34,14 +34,14 @@ export class Grants extends BaseModel {
 // ConsultancyReport Model
 export class ConsultancyReport extends BaseModel {
   constructor(){
-    super('	5_cnsltncyrep')
+    super('	5_consultancy_report')
   }
 }
 
 // PatentPublications Model
 export class PatentPublications extends BaseModel {
   constructor(){
-    super('	6_patentpublcn')
+    super('	6_patent_publication')
   }
 }
 
@@ -55,7 +55,7 @@ export class ConferenceSeminars extends BaseModel {
 // SSTP_FDP_Workshop Model
 export class SSTP_FDP_Workshop extends BaseModel {
   constructor(){
-    super('8_sttpfdpconfattended')
+    super('8_sttp_fdp_conf_attended')
   }
 }
 
@@ -71,7 +71,7 @@ export class Webinar_Guest_Lecture extends BaseModel {
 //  Number of MOUS
 export class Number_Of_Mous extends BaseModel {
   constructor() {
-    	super('10_noofmous')
+    	super('10_mous')
   }
 }
 
@@ -85,28 +85,28 @@ export class Certificate_Courses extends BaseModel {
 //  Professional Affiliations
 export class Prof_Affiliations extends BaseModel {
   constructor() {
-    super('12_profafflns')
+    super('12_prof_affiliation')
   }
 }
 
 //  Faculty as a Resource Person
 export class Faculty_as_Resource extends BaseModel {
   constructor() {
-    super('13_factasresperson')
+    super('13_resource_person')
   }
 }
 
 //  Extension Activity
 export class Extension_Activity extends BaseModel {
   constructor() {
-    super('14_extnsnactvty')
+    super('14_extension_activity')
   }
 }
 
 //  Technical Competitions, Tech Fests Organized
 export class Techfest_Organized extends BaseModel {
   constructor() {
-    super('15_techcomptnstechfest')
+    super('15_tech_comp_fest')
   }
 }
 
@@ -114,7 +114,7 @@ export class Techfest_Organized extends BaseModel {
 export class Faculty_Achievements extends BaseModel {
   constructor()
   {
-    super('16_factachievements')
+    super('16_faculty_achievements')
   }
 }
 
@@ -128,7 +128,7 @@ export class Industrial_Visits extends BaseModel {
 //  Contribution to BoS
 export class Contribution_To_BOS extends BaseModel {
   constructor() {
-    super('18_contrtobos')
+    super('18_contribution_to_bos')
   } 
 }
 
