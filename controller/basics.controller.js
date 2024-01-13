@@ -3,7 +3,8 @@ import {
     getAllTablesModel ,
     getAllColumnsModel,
     getDataForUserModel,
-    getFilteringColumnsModel
+    getFilteringColumnsModel,
+    updateSpecialAccess
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -67,6 +68,20 @@ class BasicController {
     }
   });
 
-}
+  updateAccess = catchAsyncErrors(async (req, res) => {
+    try {
+      
+      // console.log("Update api hit")
+      const { Email, SpecialAccess } = req.query;
+      const data = await updateSpecialAccess(Email, SpecialAccess);
+      // console.log("Response is : ", res)
+      res.status(200).send({success: true, data: data})
+      
+    } catch (error) {
+      res.status(500).json({success: false, message: error.message});
+    }
+  });
 
+};
+  
 export default BasicController;

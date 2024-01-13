@@ -31,3 +31,16 @@ export async function getFilteringColumnsModel(tableName) {
   const filteringColumnsArray = rows[0].filtering_columns.split(',');
   return filteringColumnsArray;
 }
+
+export async function updateSpecialAccess(Email, SpecialAccess) {
+
+  const query = `UPDATE register set SpecialAccess = '${SpecialAccess}' where Email = '${Email}'`;
+  console.log("Query is : ", query);
+
+  const rows = await sql.query(query);
+  const selectQuery = `Select * from register where Role = 1`;
+
+  const res = await sql.query(selectQuery);
+
+  return res[0];
+}
