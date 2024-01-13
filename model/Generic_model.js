@@ -2,8 +2,9 @@ import sql from '../config/db.js'
 
 // Base model
 class BaseModel {
-  constructor(tableName) {
+  constructor(tableName, ID) {
     this.tableName = tableName;
+    this.ID = ID;
   }
 
   async getAll() {
@@ -35,7 +36,7 @@ class BaseModel {
     }
   }
 
-  async update(username, T_ID, updatedFields) {
+  async update(username, ID, updatedFields) {
 
     const setValues = [];
     const setFields = [];
@@ -49,8 +50,8 @@ class BaseModel {
 
     const query = `UPDATE ${this.tableName} SET ${setFields.join(
       ", "
-    )} WHERE Username = ? and T_ID = ?`;
-    setValues.push(username, T_ID);
+    )} WHERE Username = ? and ${this.ID} = ?`;
+    setValues.push(username, ID);
 
     try {
       const result = await sql.query(query, setValues);
@@ -60,11 +61,11 @@ class BaseModel {
     }
   }
 
-  async deleteByUsername(username, T_ID) {
-    const query = `DELETE FROM ${this.tableName} WHERE Username = ? and T_ID = ?`;
+  async deleteByUsername(username, ID) {
+    const query = `DELETE FROM ${this.tableName} WHERE Username = ? and ${this.ID} = ?`;
 
     try {
-      const result = await sql.query(query, [username, T_ID]);
+      const result = await sql.query(query, [username, ID]);
       return result;
     } catch (error) {
       throw new Error(`Error deleting data: ${error.message}`);

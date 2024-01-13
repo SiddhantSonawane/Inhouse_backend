@@ -2,8 +2,9 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 
 // Generic Controller
 class GenericController {
-  constructor(Model) {
+  constructor(Model,ID) {
     this.Model = Model;
+    this.ID = ID;
   }
 
   getAll = async (req, res) => {
@@ -16,6 +17,12 @@ class GenericController {
     }
   };
 
+  create = catchAsyncErrors(async (req, res) => {
+    const modelInstance = new this.Model();
+    const newData = req.body;
+    const result = await modelInstance.create(newData);
+    res.json({ success: true, data: result });
+  });
 
   getByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
@@ -25,7 +32,6 @@ class GenericController {
     res.json({ success: true, data: data[0] });
   });
 
-  
   create = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const newData = req.body;
@@ -34,22 +40,21 @@ class GenericController {
   });
 
   updateByUsername = catchAsyncErrors(async (req, res) => {
-
-    console.log("Update controller hit");
-
     const modelInstance = new this.Model();
-    const { username, T_ID } = req.query;
+    const { username } = req.query;
+    const ID = req.query[this.ID]; // Use the stored ID field name
 
     console.log("username is : ", username);
     const updatedFields = req.body;
-    const result = await modelInstance.update(username, T_ID, updatedFields);
+    const result = await modelInstance.update(username, ID, updatedFields);
     res.json({ success: true, data: result });
   });
 
   deleteByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
-    const { username, T_ID } = req.query;
-    const result = await modelInstance.deleteByUsername(username, T_ID);
+    const { username } = req.query;
+    const ID = req.query[this.ID];
+    const result = await modelInstance.deleteByUsername(username, ID);
     res.json({ success: true, data: result });
   });
 
