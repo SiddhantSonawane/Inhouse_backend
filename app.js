@@ -12,6 +12,7 @@ app.use(cors());
 import teachersRoute from './routes/teachers.routes.js'
 import loginRegisterRoutes from './routes/loginRegisterRoutes.js';
 import basicRoutes from './routes/basics.routes.js';
+import studentRoutes from './routes/students_routes.js';
 
 
 // using routes
@@ -24,6 +25,7 @@ import basicRoutes from './routes/basics.routes.js';
 app.use("/api/v1/teacher", teachersRoute);
 app.use("/api/v1/auth", loginRegisterRoutes);
 app.use("/api/v1/general",basicRoutes)
+app.use("/api/v1/student", studentRoutes);
 
 // this middleware should be used at the last
 app.use(errorMiddleware)
