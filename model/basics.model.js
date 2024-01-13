@@ -9,7 +9,8 @@ export async function getAllTablesModel() {
 
 // Get all columns from a specific table
 export async function getAllColumnsModel(tableName) {
-  const query = `SHOW COLUMNS FROM ${tableName};`;
+  console.log("table is : ",tableName)
+  const query = `DESC ${tableName};`;
   console.log("Query is : ", query);
   return await sql.query(query);
 }
