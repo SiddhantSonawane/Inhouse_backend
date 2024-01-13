@@ -25,6 +25,7 @@ class GenericController {
     res.json({ success: true, data: data[0] });
   });
 
+  
   create = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const newData = req.body;
