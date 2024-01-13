@@ -2,7 +2,6 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import { 
     getAllTablesModel ,
     getDataForUserModel,
-    getFilteringColumnsModel,
     updateSpecialAccess
 } from "../model/basics.model.js";
 
@@ -35,21 +34,6 @@ class BasicController {
       }
 
       res.json({ success: true, data: userData });
-    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
-    }
-  });
-
-  //get the names/list of selected filtering columns for a specific table
-
-  getFilteringColumns = catchAsyncErrors(async (req, res) => {
-    try {
-      const { tablename } = req.query;
-      const filtering_columns = await getFilteringColumnsModel(tablename);
-      res.json({ success: true, data: { filtering_columns } });
-      // console.log("data[0] is : ",data[0]);
-
-      // res.json({ success: true, data: data[0] });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
