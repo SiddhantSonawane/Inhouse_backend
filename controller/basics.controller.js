@@ -2,6 +2,7 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import { 
     getAllTablesModel ,
     getDataForUserModel,
+    getAllColumns,
     updateSpecialAccess
 } from "../model/basics.model.js";
 
@@ -10,6 +11,18 @@ class BasicController {
   getAllTables = catchAsyncErrors(async (req, res) => {
     try {
       const data = await getAllTablesModel();
+      res.json({ success: true, data: data[0] });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  getAllColumns = catchAsyncErrors(async (req, res) => {
+    try {
+      const {tablename} = req.query;
+      console.log("Received request with parameters:", req.query);
+
+      const data = await getAllColumns(tablename);
       res.json({ success: true, data: data[0] });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });

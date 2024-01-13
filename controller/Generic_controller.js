@@ -58,16 +58,6 @@ class GenericController {
     res.json({ success: true, data: result });
   });
 
-  getAllColumns = catchAsyncErrors(async (req, res) => {
-    try {
-      const modelInstance = new this.Model();
-      const result = await modelInstance.getAllColumns();
-      res.json({ success: true, data: result[0] });
-    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
-    }
-  });
-
   filterData = catchAsyncErrors(async(req, res) => {
     const modelInstance = new this.Model();
 

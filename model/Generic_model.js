@@ -72,13 +72,6 @@ class BaseModel {
     }
   }
 
-  // Get all columns from a specific table
-  async getAllColumns() {
-    const query = `SHOW COLUMNS FROM ${this.tableName};`;
-    console.log("Query is : ", query);
-    return await sql.query(query);
-  }
-
   //filtering query
   async filterQuery(filters, orderBy, limit, startDate, endDate, dateColumn) {
     let query = `SELECT * FROM ${this.tableName}`;
