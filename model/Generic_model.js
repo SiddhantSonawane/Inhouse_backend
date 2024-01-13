@@ -72,6 +72,14 @@ class BaseModel {
     }
   }
 
+  // Get all columns from a specific table
+  async getAllColumns() {
+    const query = `SHOW COLUMNS FROM ${this.tableName};`;
+    console.log("Query is : ", query);
+    return await sql.query(query);
+  }
+
+  //filtering query
   async filterQuery(filters, orderBy, limit, startDate, endDate, dateColumn) {
     let query = `SELECT * FROM ${this.tableName}`;
   
@@ -115,8 +123,51 @@ class BaseModel {
     }
 }
 
+  // get all the columns that are selected for filtering by giving a table name
+  async getFilteringColumns() {
+    const query = `SELECT filtering_columns FROM metadata WHERE table_name = '${this.tableName}'`;
+    console.log("Query is : ", query);
+    // return await sql.query(query, [tableName]);
+    const [rows] = await sql.query(query, [this.tableName]); 
+    const filteringColumnsArray = rows[0].filtering_columns.split(',');
+    return filteringColumnsArray;
+  }
 
-  
+  // async getDistinctValues() {
+  //   const filteringColumns = await this.getFilteringColumns();
+  //   const columnsArray = filteringColumns;
+  //   const distinctValues = {};
+
+  //   for (const column of columnsArray) {
+  //     const query = `SELECT DISTINCT ${column} FROM ${this.tableName}`;
+  //     const result = await sql.query(query);
+
+  //     distinctValues[column] = result[0].map((row) => row[column]);
+  //   }
+
+  //   return distinctValues;
+  // }
+
+
+  //combined
+
+  async getFilteringColumnsWithDistinctValues() {
+    const filteringColumns = await this.getFilteringColumns();
+    const filteringColumnsWithDistinctValues = [];
+
+    for (const column of filteringColumns) {
+      const query = `SELECT DISTINCT ${column} FROM ${this.tableName}`;
+      const result = await sql.query(query);
+      const distinctValues = result[0].map((row) => row[column]);
+
+      filteringColumnsWithDistinctValues.push({
+        [column]: distinctValues,
+      });
+    }
+
+    return filteringColumnsWithDistinctValues;
+  }
+
 
   // You can have more specific methods 
   // for each table in their respective models.
