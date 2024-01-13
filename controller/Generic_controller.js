@@ -32,12 +32,6 @@ class GenericController {
     res.json({ success: true, data: data[0] });
   });
 
-  create = catchAsyncErrors(async (req, res) => {
-    const modelInstance = new this.Model();
-    const newData = req.body;
-    const result = await modelInstance.create(newData);
-    res.json({ success: true, data: result });
-  });
 
   updateByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
