@@ -63,9 +63,11 @@ export const checkRegistration = async (req, res) => {
 export const login = async (req, res) => {
   const { gmail, password } = req.body;
 
+  console.log("Gmail is : ", gmail, "\nPassword is : ", password);
     try {
         const results = await pool.query('SELECT * FROM register WHERE Email = ? AND Password = ?', [gmail, password]);
 
+        console.log("Results are : ", results[0])
         if (results[0].length > 0) {
             res.status(200).send({
                 success:true,

@@ -55,12 +55,14 @@ class GenericController {
   filterData = catchAsyncErrors(async(req, res) => {
     const modelInstance = new this.Model();
 
-    const { orderBy, limit, startDate, endDate, dateColumn, ...filters } = req.query;
+    const { orderBy, limit, Start_Year, End_Year, startDate, endDate, dateColumn, ...filters } = req.query;
 
     const result = await modelInstance.filterQuery(
       filters,
       orderBy, 
       limit,
+      Start_Year,
+      End_Year,
       startDate,
       endDate,
       dateColumn
