@@ -3,7 +3,7 @@ import {
     getAllTablesModel ,
     getDataForUserModel,
     getAllColumns,
-    updateSpecialAccess
+    updateSpecialAccess,
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -65,7 +65,7 @@ class BasicController {
       res.status(500).json({success: false, message: error.message});
     }
   });
-
+ 
 };
   
 export default BasicController;
