@@ -141,6 +141,24 @@ class GenericController {
     }
   });
 
+  getTableNamesST = catchAsyncErrors(async (req, res) => {
+    try {
+      const modelInstance = new this.Model();
+      const tableNames = await modelInstance.getTableNamesST();
+  
+      // combining all student and teacher data into separate arrays so that it will be easy to map in frontend 
+      const combinedData = tableNames[0].reduce((accumulator, { Student_Tables, Teacher_Tables }) => {
+        accumulator.Student_Tables.push(...Student_Tables.split(',').filter(Boolean));
+        accumulator.Teacher_Tables.push(...Teacher_Tables.split(',').filter(Boolean));
+        return accumulator;
+      }, { Student_Tables: [], Teacher_Tables: [] });
+  
+      res.json({ success: true, data: combinedData });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });   
+
   // basic func ends
 
 }

@@ -41,3 +41,73 @@ export async function updateSpecialAccess(Email, SpecialAccess) {
 
   return res[0];
 }
+
+// Update SpecialAccess columns for a user
+export async function updateSpecialAccessFields(username, studentTables, teacherTables) {
+  // Function to remove duplicates from an array
+  const removeDuplicates = (array) => Array.from(new Set(array));
+
+  // Function to append new values to existing values without duplicates
+  const appendWithoutDuplicates = (existingValues, newValues) => {
+    const allValues = removeDuplicates([...existingValues.split(','), ...newValues]);
+    return allValues.join(',');
+  };
+
+  const query = `
+    UPDATE register
+    SET 
+        SpecialAccess_Student = ?,
+        SpecialAccess_Teacher = ?
+    WHERE Username = ?;
+  `;
+  console.log('Query is:', query);
+
+  // Fetch existing values
+  const fetchQuery = `SELECT SpecialAccess_Student, SpecialAccess_Teacher FROM register WHERE Username = ?`;
+  const [existingValues] = await sql.query(fetchQuery, [username]);
+
+  // Append new values without duplicates
+  const updatedStudentTables = appendWithoutDuplicates(existingValues[0].SpecialAccess_Student, studentTables);
+  const updatedTeacherTables = appendWithoutDuplicates(existingValues[0].SpecialAccess_Teacher, teacherTables);
+
+  const params = [updatedStudentTables, updatedTeacherTables, username];
+  await sql.query(query, params);
+}
+
+
+// get the names of the tables whose access is given by admin
+
+export async function getSpecialAccessTables (username) {
+  const query = `SELECT SpecialAccess_Student, SpecialAccess_Teacher FROM register WHERE Username = '${username}';`;
+  console.log('query is : ', query);
+  return await sql.query(query)
+}
+
+// remove any table from special access of a user 
+export async function removeSpecialAccessFields(username, studentTables, teacherTables) {
+  // Function to remove values from existing values
+  const removeValues = (existingValues, valuesToRemove) => {
+    const updatedValues = existingValues.split(',').filter(value => !valuesToRemove.includes(value));
+    return updatedValues.join(',');
+  };
+
+  const query = `
+    UPDATE register
+    SET 
+        SpecialAccess_Student = ?,
+        SpecialAccess_Teacher = ?
+    WHERE Username = ?;
+  `;
+  console.log('Query is:', query);
+
+  // Fetch existing values
+  const fetchQuery = `SELECT SpecialAccess_Student, SpecialAccess_Teacher FROM register WHERE Username = ?`;
+  const [existingValues] = await sql.query(fetchQuery, [username]);
+
+  // Remove specified values
+  const updatedStudentTables = removeValues(existingValues[0].SpecialAccess_Student, studentTables);
+  const updatedTeacherTables = removeValues(existingValues[0].SpecialAccess_Teacher, teacherTables);
+
+  const params = [updatedStudentTables, updatedTeacherTables, username];
+  await sql.query(query, params);
+}
