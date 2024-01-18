@@ -20,7 +20,8 @@ import {
     Faculty_AchievementsController,
     Industrial_VisitsController,
     Contribution_To_BOSController,
-    AllUsernamesController
+    AllUsernamesController,
+    StudentTeacherTablesController
 } from '../controller/teachers.controller.js';
 
 // Research Publications Routes
@@ -262,5 +263,9 @@ router.post("/contribution-bos/get-distinct-cols-vals", controller18.getFilterin
 const controller19 = new AllUsernamesController();
 
 router.get("/getUsernames/usernames", controller19.getAllUsers)
+
+const controller20 = new StudentTeacherTablesController();
+
+router.get("/gettables/tables-stud-fact", controller20.getTableNamesST);
 
 export default router;

@@ -161,6 +161,13 @@ class BaseModel {
     return filteringColumnsWithDistinctValues;
   }
 
+  // get names of tables for students and teahers
+
+  async getTableNamesST() {
+    const query = `SELECT Student_Tables,Teacher_Tables FROM ${this.tableName};`;
+    console.log('query is: ', query);
+    return await sql.query(query);
+  }
 
   // You can have more specific methods 
   // for each table in their respective models.

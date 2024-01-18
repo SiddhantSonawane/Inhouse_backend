@@ -139,3 +139,11 @@ export class AllUsernames extends BaseModel {
       super('login_details','T_ID')
     }
 }
+
+// get table names for student and teahers
+
+export class StudentTeacherTables extends BaseModel{
+  constructor() {
+      super('alltables_stud_fact','P_ID')
+  }
+}

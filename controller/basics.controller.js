@@ -3,7 +3,10 @@ import {
     getAllTablesModel ,
     getDataForUserModel,
     getAllColumns,
-    updateSpecialAccess
+    updateSpecialAccess,
+    updateSpecialAccessFields,
+    getSpecialAccessTables,
+    removeSpecialAccessFields
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -65,6 +68,53 @@ class BasicController {
       res.status(500).json({success: false, message: error.message});
     }
   });
+
+  updateSpecialAccessFields = catchAsyncErrors(async (req, res) => {
+    try {
+      const { username, studentTables, teacherTables } = req.body;
+
+      const data = await updateSpecialAccessFields(username, studentTables, teacherTables);
+
+      res.json({ success: true, message: "Special access updated successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  getSpecialAccessTables = catchAsyncErrors(async (req, res) => {
+    try {
+        const { username } = req.query;
+
+        const data = await getSpecialAccessTables(username);
+
+        const combinedData = data[0].reduce((accumulator, { SpecialAccess_Student, SpecialAccess_Teacher }) => {
+            accumulator.SpecialAccess_Student = (accumulator.SpecialAccess_Student || []).concat(SpecialAccess_Student.split(',').filter(Boolean));
+            accumulator.SpecialAccess_Teacher = (accumulator.SpecialAccess_Teacher || []).concat(SpecialAccess_Teacher.split(',').filter(Boolean));
+            return accumulator;
+        }, {});
+
+        res.status(200).send({ success: true, data: combinedData });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// remove any table from special access of a user 
+
+removeSpecialAccessFields = catchAsyncErrors(async (req, res) => {
+  try {
+    const { username, studentTables, teacherTables } = req.body;
+
+    const data = await removeSpecialAccessFields(username, studentTables, teacherTables);
+
+    res.json({ success: true, message: "Special access updated successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
 
 };
   
