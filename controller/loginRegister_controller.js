@@ -7,22 +7,23 @@ const generateToken = (data) => {
 
 export const register = async (req, res) => {
     
-    const { name, gmail, password } = req.body;
+    const { name, gmail, password, pro_email } = req.body;
     let role;
 
     try {
-        const student = await pool.query('SELECT * FROM student_dummy WHERE Username = ?', [gmail]);
-        const teacher = await pool.query('SELECT * FROM teacher_dummy WHERE Username = ?',[gmail]);
-        if (student[0].length > 0 || teacher[0].length > 0) {
-            if(student[0].length > 0){
-                role=2;
-            }
-            else{
-                role=1;
-            }
-            await pool.query('INSERT INTO register (Name, Email, Password, Role, SpecialAccess) VALUES(?,?,?,?,?)', [name, gmail, password, role, null]);
+        const student = await pool.query('SELECT * FROM student_login WHERE Email = ?', [gmail]);
+        const teacher = await pool.query('SELECT * FROM teacher_login WHERE Username = ?',[gmail]);
+        if (student[0].length > 0){
+            role=2;
+            await pool.query('INSERT INTO register (Name, Email, Password, Role, SpecialAccess, Professional_Email) VALUES(?,?,?,?,?,?)', [name, pro_email, password, role, null, gmail]);
             res.status(200).send('Registration successful');
-        } else {
+        } 
+        else if (teacher[0].length > 0) {
+            role=1;
+            await pool.query('INSERT INTO register (Name, Email, Password, Role, SpecialAccess, Professional_Email) VALUES(?,?,?,?,?,?)', [name, gmail, password, role, null, gmail]);
+            res.status(200).send('Registration successful');
+        } 
+        else {
             res.status(400).send('Invalid email');
         }
     } catch (err) {
@@ -33,15 +34,28 @@ export const register = async (req, res) => {
 
 export const verify = async (req, res) => {
     const { gmail, password } = req.body;
+    let role;
 
     try {
-        const teacher = await pool.query('SELECT * FROM login_details WHERE Username = ? AND Password = ?', [gmail, password]);
-        const student = await pool.query('SELECT * FROM student_dummy WHERE Username = ? AND Password = ?', [gmail, password]);
-
+        const teacher = await pool.query('SELECT * FROM teacher_login WHERE Username = ? AND Password = ?', [gmail, password]);
+        const student = await pool.query('SELECT * FROM student_login WHERE Email = ? AND Password = ?', [gmail, password]);
+        if(student[0].length > 0){
+            role=2;
+        }
+        else if(teacher[0].length > 0){
+            role=1;
+        }
         if (student[0].length > 0 || teacher[0].length > 0) {
-            res.status(200).send('Email and Password verified');
+            res.status(200).send({
+                success: true,
+                message: 'Email and Password verified',
+                role: role,
+            });
         } else {
-            res.status(400).send('Invalid Credentials');
+            res.status(400).send({
+                success: false,
+                message: 'Inavlid Credentials',
+            });
         }
     } catch (err) {
         console.log(err);
