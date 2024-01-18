@@ -73,19 +73,33 @@ class BaseModel {
   }
 
   //filtering query
-  async filterQuery(filters, orderBy, limit, startDate, endDate, dateColumn) {
+  async filterQuery(filters, orderBy, limit, Start_Year, End_Year, startDate, endDate, dateColumn) {
     let query = `SELECT * FROM ${this.tableName}`;
   
     if (filters && Object.keys(filters).length > 0) {
       query += ' WHERE ';
       const filterKeys = Object.keys(filters);
       filterKeys.forEach((key, index) => {
-        query += `${key} = '${filters[key]}'`;
+        if(key == 'Username') {
+          query += `USername like '%${filters[key]}%'`;
+        }
+        else
+          query += `${key} = '${filters[key]}'`;
   
         if (index !== filterKeys.length - 1) {
           query += ' AND ';
         }
       });
+    }
+
+    if(Start_Year && End_Year) {
+      
+      if (filters && Object.keys(filters).length > 0) {
+        query += ' AND ';
+      } else {
+        query += ' WHERE ';
+      }
+      query += `Year BETWEEN '${Start_Year}' AND '${End_Year}'`;
     }
 
     // Adding dynamic date filtering if start and end dates are provided
@@ -107,6 +121,8 @@ class BaseModel {
     if (limit) {
       query += ` LIMIT ${limit} `;
     }
+
+    // console.log("Query found is : ", query);
 
     try {
       const result = await sql.query(query);

@@ -1,4 +1,9 @@
 import pool from "../config/db.js";
+import jwt from 'jsonwebtoken';
+
+const generateToken = (data) => {
+    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: '1h' }); 
+};
 
 export const register = async (req, res) => {
     
@@ -61,31 +66,36 @@ export const checkRegistration = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { gmail, password } = req.body;
-
+    const { gmail, password } = req.body;
     try {
         const results = await pool.query('SELECT * FROM register WHERE Email = ? AND Password = ?', [gmail, password]);
-
+        
         if (results[0].length > 0) {
+            const user = results[0][0];
+            const accessToken = generateToken({ id: user.id, email: user.Email, role: user.Role });
+
             res.status(200).send({
-                success:true,
-                message:'Login Successful',
-                data:results[0][0]
+                success: true,
+                message: 'Login Successful',
+                data: {
+                    user,
+                    accessToken,
+                },
             });
         } else {
             res.status(401).send({
-                success:false,
-                message:'Invalid credentials',
-                data:'Invalid credentials'
+                success: false,
+                message: 'Invalid credentials',
+                data: 'Invalid credentials',
             });
         }
     } catch (err) {
-            console.log(err);
-            res.status(500).send({
-                success:false,
-                message:'Error in login',
-                data:err.message
-            });
+        console.log(err);
+        res.status(500).send({
+            success: false,
+            message: 'Error in login',
+            data: err.message,
+        });
     }
 };
 
