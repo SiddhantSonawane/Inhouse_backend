@@ -134,7 +134,7 @@ class BaseModel {
 
   // get all the columns that are selected for filtering by giving a table name
   async getFilteringColumns() {
-    const query = `SELECT filtering_columns FROM metadata WHERE table_name = '${this.tableName}'`;
+    const query = `SELECT filtering_columns FROM metadata_teacher WHERE table_name = '${this.tableName}'`;
     console.log("Query is : ", query);
     // return await sql.query(query, [tableName]);
     const [rows] = await sql.query(query, [this.tableName]); 
