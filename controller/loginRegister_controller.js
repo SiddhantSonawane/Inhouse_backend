@@ -82,7 +82,7 @@ export const checkRegistration = async (req, res) => {
 export const login = async (req, res) => {
     const { gmail, password } = req.body;
     try {
-        const results = await pool.query('SELECT * FROM register WHERE Email = ? AND Password = ?', [gmail, password]);
+        const results = await pool.query('SELECT * FROM register WHERE Username = ? AND Password = ?', [gmail, password]);
         
         if (results[0].length > 0) {
             const user = results[0][0];
@@ -115,7 +115,7 @@ export const login = async (req, res) => {
 
 export const getAllTeacher = async (req,res) => {
     try {
-        const teacher = await pool.query('SELECT Name, Email, Role, SpecialAccess FROM register WHERE Role = 1');
+        const teacher = await pool.query('SELECT Name, Username, Role, SpecialAccess_Teacher, SpecialAccess_Student FROM register WHERE Role = 1');
         if(teacher[0].length > 0){
             res.status(200).send({
                 success:true,
@@ -142,7 +142,7 @@ export const getAllTeacher = async (req,res) => {
 
 export const getAllStudent = async (req,res) => {
     try {
-        const student = await pool.query('SELECT Name, Email, Role, SpecialAccess FROM register WHERE Role = 2');
+        const student = await pool.query('SELECT Name, Username, Role FROM register WHERE Role = 2');
         if(student[0].length > 0){
             res.status(200).send({
                 success:true,
