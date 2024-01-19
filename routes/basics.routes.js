@@ -11,5 +11,7 @@ router.post("/update-access", basicController.updateAccess)
 router.post("/update-fields",basicController.updateSpecialAccessFields)
 router.post("/get-spec-cols",basicController.getSpecialAccessTables)
 router.post("/remove-spec-cols",basicController.removeSpecialAccessFields)
+router.post("/get-notices", basicController.getNotices);
+router.post("/send-notice", basicController.addNotices);
 
 export default router;
