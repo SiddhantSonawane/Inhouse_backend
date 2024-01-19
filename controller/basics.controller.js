@@ -6,7 +6,9 @@ import {
     updateSpecialAccess,
     updateSpecialAccessFields,
     getSpecialAccessTables,
-    removeSpecialAccessFields
+    removeSpecialAccessFields,
+    getAllNotices,
+    addNotices
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -114,7 +116,37 @@ removeSpecialAccessFields = catchAsyncErrors(async (req, res) => {
   }
 });
 
+getNotices = catchAsyncErrors(async (req, res) => {
 
+  try {
+
+    const { Role } = req.body;
+    console.log("Get notices hit with Role = ", Role)
+
+    const data = await getAllNotices(Role);
+    console.log("data is : ", data)
+
+    res.status(200).json({success: true, data: data});
+
+  } catch(error) {
+    res.status(500).json({success: false, message: error.message})
+  }
+})
+
+addNotices = catchAsyncErrors(async (req, res) => {
+
+  try {
+    
+    const {Username, Title, Description, Role, date } = req.body;
+    const data = await addNotices({ Username, Title, Description, Role, date });
+    const response = await getAllNotices(Role);
+
+    res.status(200).json({success: true, data: response})
+
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message});
+  }
+})
 
 };
   
