@@ -1,4 +1,6 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import sql from '../config/db.js';
+
 import { 
     getAllTablesModel ,
     getDataForUserModel,
@@ -6,7 +8,10 @@ import {
     updateSpecialAccess,
     updateSpecialAccessFields,
     getSpecialAccessTables,
-    removeSpecialAccessFields
+    removeSpecialAccessFields, 
+    getEntryCountsOfUser,
+    getTableNames,
+    getEntryCountsOfTable
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -109,6 +114,56 @@ removeSpecialAccessFields = catchAsyncErrors(async (req, res) => {
     const data = await removeSpecialAccessFields(username, studentTables, teacherTables);
 
     res.json({ success: true, message: "Special access updated successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+//get entries of a user
+
+getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    const entryCounts = await getEntryCountsOfUser(username);
+
+    const responseData = {
+      success: true,
+      data: {
+        Tables: entryCounts.reduce((acc, entry) => {
+          const tableName = Object.keys(entry)[0];
+          acc.push({ [tableName]: entry[tableName] });
+          return acc;
+        }, [])
+      }
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// get the count of rows/entries from table
+
+getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
+  try {
+    // Fetch table names from the alltables_stud_fact table
+    const { studentTables, teacherTables } = await getTableNames();
+
+    // Fetch entry counts for student tables
+    const studentEntryCounts = await Promise.all(studentTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    // Fetch entry counts for teacher tables
+    const teacherEntryCounts = await Promise.all(teacherTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    res.json({ success: true, data: { Student_Tables: studentEntryCounts, Teacher_Tables: teacherEntryCounts } });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

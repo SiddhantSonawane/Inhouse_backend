@@ -111,3 +111,81 @@ export async function removeSpecialAccessFields(username, studentTables, teacher
   const params = [updatedStudentTables, updatedTeacherTables, username];
   await sql.query(query, params);
 }
+
+// Get count of entries for a user in each table
+export async function getEntryCountsOfUser(username) {
+  try {
+    // Determine if the user is a teacher or student based on the 'Role' column
+    const roleQuery = `SELECT Role FROM register WHERE Username = ?`;
+    const [roleResult] = await sql.query(roleQuery, [username]);
+    const role = roleResult[0].Role;
+
+    let tablesColumn;
+    if (role === 1) {
+      // Teacher role
+      tablesColumn = 'Teacher_Tables';
+    } else if (role === 2) {
+      // Student role
+      tablesColumn = 'Student_Tables';
+    } else {
+      throw new Error('Invalid user role');
+    }
+
+    // Fetch table names for the specific role
+    const tablesQuery = `SELECT ${tablesColumn} FROM alltables_stud_fact`;
+    const [tablesResult] = await sql.query(tablesQuery);
+    console.log('Fetched tables:', tablesResult);
+
+    const tables = tablesResult
+    .filter(row => row[tablesColumn])
+    .map(row => row[tablesColumn]);
+
+    // Fetch count of entries for the user in each table
+    const entryCounts = [];
+    for (const table of tables) {
+      const countQuery = `SELECT COUNT(*) AS entryCount FROM \`${table}\` WHERE Username = ?`;
+      const [countResult] = await sql.query(countQuery, [username]);
+      const entryCount = countResult[0].entryCount;
+
+      entryCounts.push({ [table]: entryCount });
+    }
+
+    return entryCounts;
+  } catch (error) {
+    throw new Error(`Error fetching entry counts: ${error.message}`);
+  }
+}
+
+// get the count of rows/entries from table
+export async function getTableNames() {
+  try {
+    const tablesQuery = "SELECT * FROM alltables_stud_fact";
+    const [tablesResult] = await sql.query(tablesQuery);
+
+    // console.log('all tables:', tablesResult);
+    
+    const allTables = tablesResult[0];
+    
+    // Assuming 'Student_Tables' and 'Teacher_Tables' are columns in the result
+    const studentTables = tablesResult.map(row => row.Student_Tables).filter(tableName => tableName.trim() !== '');
+    const teacherTables = tablesResult.map(row => row.Teacher_Tables).filter(tableName => tableName.trim() !== '');
+
+    console.log('stud tables:', studentTables);
+    console.log('teacher tables:', teacherTables);
+
+    return { studentTables, teacherTables };
+  } catch (error) {
+    throw new Error(`Error fetching table names: ${error.message}`);
+  }
+}
+
+export async function getEntryCountsOfTable(tableName) {
+  try {
+    // Ensure proper backtick usage around the table name
+    const countQuery = `SELECT COUNT(*) AS entryCount FROM \`${tableName}\``;
+    const [countResult] = await sql.query(countQuery);
+    return countResult[0].entryCount;
+  } catch (error) {
+    throw new Error(`Error fetching entry counts for ${tableName}: ${error.message}`);
+  }
+}
