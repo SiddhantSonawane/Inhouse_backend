@@ -11,7 +11,9 @@ import {
     removeSpecialAccessFields, 
     getEntryCountsOfUser,
     getTableNames,
-    getEntryCountsOfTable
+    getEntryCountsOfTable,
+    getAllNotices,
+    addNotices
 } from "../model/basics.model.js";
 
 class BasicController {
@@ -169,7 +171,87 @@ getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
   }
 });
 
+//get entries of a user
 
+getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    const entryCounts = await getEntryCountsOfUser(username);
+
+    const responseData = {
+      success: true,
+      data: {
+        Tables: entryCounts.reduce((acc, entry) => {
+          const tableName = Object.keys(entry)[0];
+          acc.push({ [tableName]: entry[tableName] });
+          return acc;
+        }, [])
+      }
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// get the count of rows/entries from table
+
+getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
+  try {
+    // Fetch table names from the alltables_stud_fact table
+    const { studentTables, teacherTables } = await getTableNames();
+
+    // Fetch entry counts for student tables
+    const studentEntryCounts = await Promise.all(studentTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    // Fetch entry counts for teacher tables
+    const teacherEntryCounts = await Promise.all(teacherTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    res.json({ success: true, data: { Student_Tables: studentEntryCounts, Teacher_Tables: teacherEntryCounts } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+getNotices = catchAsyncErrors(async (req, res) => {
+
+  try {
+
+    const { Role } = req.body;
+    console.log("Get notices hit with Role = ", Role)
+
+    const data = await getAllNotices(Role);
+    console.log("data is : ", data)
+
+    res.status(200).json({success: true, data: data});
+
+  } catch(error) {
+    res.status(500).json({success: false, message: error.message})
+  }
+})
+
+addNotices = catchAsyncErrors(async (req, res) => {
+
+  try {
+    
+    const {Username, Title, Description, Role, date } = req.body;
+    const data = await addNotices({ Username, Title, Description, Role, date });
+    const response = await getAllNotices(Role);
+
+    res.status(200).json({success: true, data: response})
+
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message});
+  }
+})
 
 };
   

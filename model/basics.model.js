@@ -189,3 +189,30 @@ export async function getEntryCountsOfTable(tableName) {
     throw new Error(`Error fetching entry counts for ${tableName}: ${error.message}`);
   }
 }
+
+
+export async function getAllNotices(Role) {
+
+  console.log("Get notices model hit with Role = ", Role)
+  var query = "";
+  if(Role == 1 || Role == 2)
+  {
+    query = `SELECT * from notices where Role = 0`;
+  }
+  else
+  {
+    query = `SELECT * from notices where Role != 0`;
+  }
+  console.log("Query is = ", query)
+
+  const result =  await sql.query(query);
+  console.log("Result is  = ", result)
+  return result[0];
+}
+
+export async function addNotices(notice) {
+  
+  const { Username, Title, Description, Role} = notice;
+  await sql.query("INSERT INTO notices (Username, Title, Description, Role, DateTime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())", [Username, Title, Description, Role]);
+  
+}

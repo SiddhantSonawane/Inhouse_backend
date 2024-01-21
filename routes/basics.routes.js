@@ -13,5 +13,7 @@ router.post("/get-spec-cols",basicController.getSpecialAccessTables)
 router.post("/remove-spec-cols",basicController.removeSpecialAccessFields)
 router.post("/get-count-user",basicController.getEntryCountsOfUser)
 router.get("/get-count-tables",basicController.getEntryCountsAPI)
+router.post("/get-notices", basicController.getNotices);
+router.post("/send-notice", basicController.addNotices);
 
 export default router;
