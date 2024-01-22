@@ -1,75 +1,74 @@
 import BaseModel from './Generic_model.js';
 
-// ResearchPublications Model
+// INternship Model
 export class StudentInternshipDetails extends BaseModel {
-  constructor(){
-    super('1__student___internship_details','S_ID')
+  constructor() {
+    super('student_internship_details', 'S_ID')
   }
 }
 
-// BookPublications Model
-export class StudentResearchPublication extends BaseModel { 
+// Research Model
+export class StudentResearchPublication extends BaseModel {
   constructor() {
-    super('2__student___research_publication','S_ID');
+    super('student_research_publication', 'S_ID');
   }
 
   // Specific methods for BookPublications table
-  
+
 }
 
-// FacultyConferencePublications Model
+// Conference Model
 export class StudentConferencePublication extends BaseModel {
-  constructor(){
-    super('3__student___conference_publication','S_ID')
+  constructor() {
+    super('student_conference_publication', 'S_ID')
   }
 }
 
 // Grants Model
 export class StudentCertificateCourses extends BaseModel {
-  constructor(){
-    super('4__student___certificate_course_attended','S_ID')
+  constructor() {
+    super('student_certificate_course', 'S_ID')
   }
 }
 
 // ConsultancyReport Model
 export class StudentSportsData extends BaseModel {
-  constructor(){
-    super('5__students___sports_data','S_ID')
+  constructor() {
+    super('student_sports_data', 'S_ID')
   }
 }
 
-// PatentPublications Model
+// Event Participated
 export class StudentEventParticipation extends BaseModel {
-  constructor(){
-    super('6__students___event_participated','S_ID')
+  constructor() {
+    super('student_event_participated', 'S_ID')
   }
 }
 
-// ConferenceSeminars Model
+// Event Organized
 export class StudentEventOrganization extends BaseModel {
-  constructor(){
-    super('7__students___event_organized','S_ID')
+  constructor() {
+    super('student_event_organized', 'S_ID')
   }
 }
 
-// SSTP_FDP_Workshop Model
+// Technical Events
 export class StudentTechnicalEvents extends BaseModel {
-  constructor(){
-    super('8__students___technical_events','S_ID')
+  constructor() {
+    super('student_technical_events', 'S_ID')
   }
 }
 
-//  Webinar Guest Lecture
+//  Higher Education
 export class StudentHigherEducation extends BaseModel {
-  constructor()
-  {
-    super('9__student___higher_education','S_ID')
+  constructor() {
+    super('student_higher_education', 'S_ID')
   }
 }
 //fetch all usernames 
 
 export class AllUsernames extends BaseModel {
-    constructor() {
-      super('login_details','S_ID')
-    }
+  constructor() {
+    super('login_details', 'S_ID')
+  }
 }
