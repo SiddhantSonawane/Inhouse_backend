@@ -15,12 +15,12 @@ export const register = async (req, res) => {
         const teacher = await pool.query('SELECT * FROM teacher_login WHERE Username = ?',[gmail]);
         if (student[0].length > 0){
             role=2;
-            await pool.query('INSERT INTO register (Name, Email, Password, Role, SpecialAccess, Professional_Email) VALUES(?,?,?,?,?,?)', [name, pro_email, password, role, null, gmail]);
+            await pool.query('INSERT INTO register (Name, Username, Password, Role, Professional_Email) VALUES(?,?,?,?,?)', [name, pro_email, password, role, gmail]);
             res.status(200).send('Registration successful');
         } 
         else if (teacher[0].length > 0) {
             role=1;
-            await pool.query('INSERT INTO register (Name, Email, Password, Role, SpecialAccess, Professional_Email) VALUES(?,?,?,?,?,?)', [name, gmail, password, role, null, gmail]);
+            await pool.query('INSERT INTO register (Name, Username, Password, Role,Professional_Email) VALUES(?,?,?,?,?)', [name, gmail, password, role, gmail]);
             res.status(200).send('Registration successful');
         } 
         else {
