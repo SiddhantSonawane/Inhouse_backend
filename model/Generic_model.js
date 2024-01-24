@@ -196,6 +196,25 @@ class BaseModel {
     return await sql.query(query);
   }
 
+  //check if file already exists
+  async checkExistingFile(user_id, role, filename) {
+    // const filename = `${file.originalname}`;
+    const existingFileQuery = `SELECT * FROM uploads WHERE user_id = ? AND role = ? AND file_name = ?`;
+    const result = await sql.query(existingFileQuery, [user_id, role, filename]);
+
+    // console.log('res ', result)
+
+    if (result[0].length > 0) {
+        const file = result[0][0];
+        if (file.file_path) {
+            return { filename: file.file_name, filePath: file.file_path };
+        }
+    }
+
+    return null;
+}
+
+
 
   //file upload functionality
 
@@ -208,29 +227,6 @@ class BaseModel {
     const filename = `${file.originalname}`;
     // console.log(filename)
     const filePath = path.join(uploadPath, filename);
-
-    // Check if the file already exists in the database
-    const existingFileQuery = `SELECT * FROM uploads WHERE user_id = ? AND role = ? AND file_name = ?`;
-    const existingFiles = await sql.query(existingFileQuery, [1, role, filename]);
-
-    console.log('len ', existingFiles[0].length)
-    const len = existingFiles[0].length;
-
-    // console.log('exixst ', existingFiles[0][0].file_name );
-
-    if(len > 0)
-    {
-      const existingfilename = existingFiles[0][0].file_name;
-      const existingfilepath = existingFiles[0][0].file_path;
-      console.log('path is ', existingfilepath)
-      if (existingFiles[0].length > 0 && existingfilename == filename) {
-        // File with the same name already exists, handle accordingly
-        console.log("File with the same name already exists:", filename);
-        //  throw an error, return a message
-        return { filename: existingfilename, filePath: existingfilepath};
-        // throw new Error("File with the same name already exists");
-      }
-    }
 
     // Save file to local storage
     fs.writeFileSync(filePath, file.buffer)

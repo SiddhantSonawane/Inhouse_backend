@@ -186,33 +186,42 @@ class GenericController {
 
   uploadFile = async (req, res) => {
     try {
-      const modelInstance = new this.Model();
-      const { username, role, tableName } = req.query;
-      const file = req.file;
-      
+        const modelInstance = new this.Model();
+        const { username, role, tableName } = req.query;
+        const file = req.file;
 
-      if (!file) {
-        return res.status(400).json({ success: false, message: 'File not provided' });
-      }
-      
-      // Check if the file type is PDF
-      if (file.mimetype !== 'application/pdf') {
-        return res.status(400).json({ success: false, message: 'Only PDF files are allowed' });
-      }
-      // console.log("first")
-      // const uploadPath = path.join(this.baseUploadPath, roleFolder, userFolder, tableFolder);
-      const { filePath } = await modelInstance.uploadFile(username, role, tableName, file)
-      // console.log("second")
+        const filename = `${file.originalname}`;
 
-      // console.log('upload path designed ', filePath);
+        if (!file) {
+            return res.status(400).json({ success: false, message: 'File not provided' });
+        }
 
-      await this.ensureDirectoryExists(filePath);
+        // Check if the file type is PDF
+        if (file.mimetype !== 'application/pdf') {
+            return res.status(400).json({ success: false, message: 'Only PDF files are allowed' });
+        }
 
-      res.json({ success: true, message: "File uploaded successfully !", "filePath": filePath });
+        // Check if the file path corresponds to an existing file
+        const existingFile = await modelInstance.checkExistingFile(1, role, filename);
+        // console.log('existing file ', existingFile)
+
+        if(existingFile==null)
+        {
+          // Get the file path from the uploadFile method
+          const { filePath } = await modelInstance.uploadFile(username, role, tableName, file);
+          await this.ensureDirectoryExists(filePath);
+          return res.json({ success: true, message: "File uploaded successfully", filePath });
+        }
+        // Display different messages based on whether it's a new or existing file
+        else {
+          return res.json({ success: true, message: "File already exists", path: existingFile.filePath });
+        } 
+        
     } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
-  };
+};
+
 
   // get the pdf file controller
   getPdfContent = catchAsyncErrors(async (req, res) => {
