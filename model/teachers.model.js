@@ -145,9 +145,6 @@ export class AllUsernames extends BaseModel {
   constructor() {
     super('teacher_login', 'T_ID')
   }
-  constructor() {
-    super('teacher_login', 'T_ID')
-  }
 }
 
 // get table names for student and teahers

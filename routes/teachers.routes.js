@@ -40,6 +40,8 @@ router.post("/research-pb/filter", controller1.filterData); //added filter data 
 // router.post("/research-pb/get-distinct-vals", controller1.getDistinctValues) // get the distinct values from filtering cols
 router.post("/research-pb/get-distinct-cols-vals", controller1.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
 router.post("/research-pb/upload-file", upload.single('file'), controller1.uploadFile);
+router.post("/research-pb/pdf-content", controller1.getPdfContent);
+
 
 // Book Publications Routes
 const controller2 = new BookPublicationsController();

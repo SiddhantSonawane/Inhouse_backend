@@ -214,6 +214,26 @@ class GenericController {
     }
   };
 
+  // get the pdf file controller
+  getPdfContent = catchAsyncErrors(async (req, res) => {
+    try {
+      const modelInstance = new this.Model();
+      const { user_id, role, filename } = req.query;
+
+      const pdfContent = await modelInstance.getPdfContent(user_id, role, filename);
+
+      if (!pdfContent) {
+        return res.status(404).json({ success: false, message: 'PDF file not found for the user' });
+      }
+
+      res.json({ success: true, data: pdfContent });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+
+
   // basic func ends
 
 }

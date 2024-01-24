@@ -209,12 +209,23 @@ class BaseModel {
     // console.log(filename)
     const filePath = path.join(uploadPath, filename);
 
+    // Check if the file already exists in the database
+    const existingFileQuery = `SELECT * FROM uploads WHERE user_id = ? AND role = ? AND file_name = ?`;
+    const existingFiles = await sql.query(existingFileQuery, [1, role, filename]);
+
+    if (existingFiles && existingFiles.length > 0) {
+        // File with the same name already exists, handle accordingly
+        console.log("File with the same name already exists:", filename);
+        // You can throw an error, return a message, or handle it based on your requirements
+        throw new Error("File with the same name already exists");
+    }
+
     // Save file to local storage
     fs.writeFileSync(filePath, file.buffer)
     
     // Save file information to the database
-    const insertQuery = `INSERT INTO uploads (user_id, file_name, file_path, created_at) VALUES (?, ?, ?, NOW())`;
-    await sql.query(insertQuery, [1,filename, filePath]);
+    const insertQuery = `INSERT INTO uploads (user_id, role, file_name, file_path, created_at) VALUES (?, ?, ?, ?, NOW())`;
+    await sql.query(insertQuery, [1,role,filename, filePath]);
 
     return { filename, filePath };
   }
@@ -258,6 +269,29 @@ class BaseModel {
       }
     }
   }
+  
+  // fetch the pdf files
+
+  async getPdfContent(user_id, role, filename) {
+    try {
+      const query = `
+        SELECT file_name, file_path
+        FROM uploads
+        WHERE user_id = ? AND role = ? AND file_name = ?;
+      `;
+      const result = await sql.query(query, [user_id, role, filename]);
+
+      if (result && result.length > 0) {
+        return result[0];
+      }
+
+      return null;
+    } catch (error) {
+      throw new Error(`Error fetching PDF content: ${error.message}`);
+    }
+  }
+
+
   
 
   // You can have more specific methods 
