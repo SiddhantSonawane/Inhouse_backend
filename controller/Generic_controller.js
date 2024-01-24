@@ -189,13 +189,16 @@ class GenericController {
       const modelInstance = new this.Model();
       const { username, role, tableName } = req.query;
       const file = req.file;
+      
 
       if (!file) {
         return res.status(400).json({ success: false, message: 'File not provided' });
       }
       
-      // Ensure directory structure exists
-      
+      // Check if the file type is PDF
+      if (file.mimetype !== 'application/pdf') {
+        return res.status(400).json({ success: false, message: 'Only PDF files are allowed' });
+      }
       // console.log("first")
       // const uploadPath = path.join(this.baseUploadPath, roleFolder, userFolder, tableFolder);
       const { filePath } = await modelInstance.uploadFile(username, role, tableName, file)
@@ -205,7 +208,7 @@ class GenericController {
 
       await this.ensureDirectoryExists(filePath);
 
-      res.json({ success: true, message: "File uploaded successfully" });
+      res.json({ success: true, message: "File uploaded successfully !", "filePath": filePath });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
