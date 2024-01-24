@@ -1,5 +1,8 @@
 import express from 'express';
+import multer from 'multer';
+
 const router = express.Router();
+const upload = multer();
 
 import {
     BookPublicationsController,
@@ -36,7 +39,7 @@ router.post("/research-pb/filter", controller1.filterData); //added filter data 
 // router.post("/research-pb/get-filter-cols", controller1.getFilteringColumns) // get names of filtering columns
 // router.post("/research-pb/get-distinct-vals", controller1.getDistinctValues) // get the distinct values from filtering cols
 router.post("/research-pb/get-distinct-cols-vals", controller1.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
-
+router.post("/research-pb/upload-file", upload.single('file'), controller1.uploadFile);
 
 // Book Publications Routes
 const controller2 = new BookPublicationsController();
@@ -50,6 +53,7 @@ router.post("/book-pb/filter", controller2.filterData);
 // router.post("/book-pb/get-filter-cols", controller2.getFilteringColumns) // get names of filtering columns
 // router.post("/book-pb/get-distinct-vals", controller2.getDistinctValues) // get the distinct values from filtering cols
 router.post("/book-pb/get-distinct-cols-vals", controller2.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/book-pb/upload-file", upload.single('file'), controller2.uploadFile);
 
 
 // Faculty Conference Publications Routes
@@ -64,6 +68,7 @@ router.post("/faculty-pb/filter", controller3.filterData);
 // router.post("/faculty-pb/get-filter-cols", controller3.getFilteringColumns) // get names of filtering columns
 // router.post("/faculty-pb/get-distinct-vals", controller3.getDistinctValues) // get the distinct values from filtering cols
 router.post("/faculty-pb/get-distinct-cols-vals", controller3.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/faculty-pb/upload-file", upload.single('file'), controller3.uploadFile);
 
 // Grants Routes
 const controller4 = new GrantsController();
@@ -77,6 +82,7 @@ router.post("/grants/filter", controller4.filterData);
 // router.post("/grants/get-filter-cols", controller4.getFilteringColumns) // get names of filtering columns
 // router.post("/grants/get-distinct-vals", controller4.getDistinctValues) // get the distinct values from filtering cols
 router.post("/grants/get-distinct-cols-vals", controller4.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/grants/upload-file", upload.single('file'), controller4.uploadFile);
 
 // ConsultancyReport Routes
 const controller5 = new ConsultancyReportController();
@@ -90,6 +96,7 @@ router.post("/cons-rep/filter", controller5.filterData);
 // router.post("/cons-rep/get-filter-cols", controller5.getFilteringColumns) // get names of filtering columns
 // router.post("/cons-rep/get-distinct-vals", controller5.getDistinctValues) // get the distinct values from filtering cols
 router.post("/consrep/get-distinct-cols-vals", controller5.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/consrep/upload-file", upload.single('file'), controller5.uploadFile);
 
 // Patent Publication Routes
 const controller6 = new PatentPublicationsController();
@@ -103,6 +110,7 @@ router.post("/patent-pb/filter", controller6.filterData);
 // router.post("/patent-pb/get-filter-cols", controller6.getFilteringColumns) // get names of filtering columns
 // router.post("/patent-pb/get-distinct-vals", controller6.getDistinctValues) // get the distinct values from filtering cols
 router.post("/patent-pb/get-distinct-cols-vals", controller6.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/patent-pb/upload-file", upload.single('file'), controller6.uploadFile);
 
 // Conference Seminars Routes
 const controller7 = new ConferenceSeminarsController();
@@ -116,6 +124,7 @@ router.post("/con-sem/filter", controller7.filterData);
 // router.post("/con-sem/get-filter-cols", controller7.getFilteringColumns) // get names of filtering columns
 // router.post("/con-sem/get-distinct-vals", controller7.getDistinctValues) // get the distinct values from filtering cols
 router.post("/con-sem/get-distinct-cols-vals", controller7.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/con-sem/upload-file", upload.single('file'), controller7.uploadFile);
 
 // SSTP_FDP_Workshop Routes
 const controller8 = new SSTP_FDP_WorkshopController();
@@ -129,6 +138,7 @@ router.post("/sf-ws/filter", controller8.filterData);
 // router.post("/sf-ws/get-filter-cols", controller8.getFilteringColumns) // get names of filtering columns
 // router.post("/sf-ws/get-distinct-vals", controller8.getDistinctValues) // get the distinct values from filtering cols
 router.post("/sf-ws/get-distinct-cols-vals", controller8.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/sf-ws/upload-file", upload.single('file'), controller8.uploadFile);
 
 // Webinar Guest Lecture Routes
 const controller9 = new Webinar_Guest_LectureController();
@@ -142,6 +152,7 @@ router.post("/web-guest/filter", controller9.filterData);
 // router.post("/web-guest/get-filter-cols", controller9.getFilteringColumns) // get names of filtering columns
 // router.post("/web-guest/get-distinct-vals", controller9.getDistinctValues) // get the distinct values from filtering cols
 router.post("/web-guest/get-distinct-cols-vals", controller9.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/web-guest/upload-file", upload.single('file'), controller9.uploadFile);
 
 // Number_Of_Mous Routes
 const controller10 = new Number_Of_MousController();
@@ -155,6 +166,7 @@ router.post("/number-of_mous/filter", controller10.filterData);
 // router.post("/number-of_mous/get-filter-cols", controller10.getFilteringColumns) // get names of filtering columns
 // router.post("/number-of_mous/get-distinct-vals", controller10.getDistinctValues) // get the distinct values from filtering cols
 router.post("/number-of_mous/get-distinct-cols-vals", controller10.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/number-of_mous/upload-file", upload.single('file'), controller10.uploadFile);
 
 // Certificate_Courses Routes
 const controller11 = new Certificate_CoursesController();
@@ -168,6 +180,7 @@ router.post("/cert-courses/filter", controller11.filterData);
 // router.post("/cert-courses/get-filter-cols", controller11.getFilteringColumns) // get names of filtering columns
 // router.post("/cert-courses/get-distinct-vals", controller11.getDistinctValues) // get the distinct values from filtering cols
 router.post("/cert-courses/get-distinct-cols-vals", controller11.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/cert-courses/upload-file", upload.single('file'), controller11.uploadFile);
 
 // Prof_Affiliations Routes
 const controller12 = new Prof_AffiliationsController();
@@ -181,6 +194,7 @@ router.post("/prof-aff/filter", controller12.filterData);
 // router.post("/prof-aff/get-filter-cols", controller12.getFilteringColumns) // get names of filtering columns
 // router.post("/prof-aff/get-distinct-vals", controller12.getDistinctValues) // get the distinct values from filtering cols
 router.post("/prof-aff/get-distinct-cols-vals", controller12.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/prof-aff/upload-file", upload.single('file'), controller12.uploadFile);
 
 // Faculty_as_Resource Routes
 const controller13 = new Faculty_as_ResourceController();
@@ -194,6 +208,7 @@ router.post("/facultyresource/filter", controller13.filterData);
 // router.post("/facultyresource/get-filter-cols", controller13.getFilteringColumns) // get names of filtering columns
 // router.post("/facultyresource/get-distinct-vals", controller13.getDistinctValues) // get the distinct values from filtering cols
 router.post("/facultyresource/get-distinct-cols-vals", controller13.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/facultyresource/upload-file", upload.single('file'), controller13.uploadFile);
 
 // Extension_Activity Routes
 const controller14 = new Extension_ActivityController();
@@ -207,6 +222,7 @@ router.post("/extension-act/filter", controller14.filterData);
 // router.post("/extension-act/get-filter-cols", controller14.getFilteringColumns) // get names of filtering columns
 // router.post("/extension-act/get-distinct-vals", controller14.getDistinctValues) // get the distinct values from filtering cols
 router.post("/extension-act/get-distinct-cols-vals", controller14.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/extension-act/upload-file", upload.single('file'), controller14.uploadFile);
 
 // Techfest_Organized Routes
 const controller15 = new Techfest_OrganizedController();
@@ -220,6 +236,7 @@ router.post("/techfest-org/filter", controller15.filterData);
 // router.post("/techfest-org/get-filter-cols", controller15.getFilteringColumns) // get names of filtering columns
 // router.post("/techfest-org/get-distinct-vals", controller15.getDistinctValues) // get the distinct values from filtering cols
 router.post("/techfest-org/get-cols-vals", controller15.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/techfest-org/upload-file", upload.single('file'), controller15.uploadFile);
 
 // Faculty_Achievements Routes
 const controller16 = new Faculty_AchievementsController();
@@ -233,6 +250,8 @@ router.post("/faculty-achievement/filter", controller16.filterData);
 // router.post("/faculty-achievement/get-filter-cols", controller16.getFilteringColumns) // get names of filtering columns
 // router.post("/faculty-achievement/get-distinct-vals", controller16.getDistinctValues) // get the distinct values from filtering cols
 router.post("/faculty-achievement/get-distinct-cols-vals", controller16.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/faculty-achievement/upload-file", upload.single('file'), controller16.uploadFile);
+
 
 // Industrial_Visits Routes
 const controller17 = new Industrial_VisitsController();
@@ -246,6 +265,7 @@ router.post("/visit-tours/filter", controller17.filterData);
 // router.post("/visit-tours/get-filter-cols", controller17.getFilteringColumns) // get names of filtering columns
 // router.post("/visit-tours/get-distinct-vals", controller17.getDistinctValues) // get the distinct values from filtering cols
 router.post("/visit-tours/get-distinct-cols-vals", controller17.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/visit-tours/upload-file", upload.single('file'), controller17.uploadFile);
 
 // Contribution_To_BOS Routes
 const controller18 = new Contribution_To_BOSController();
@@ -259,6 +279,7 @@ router.post("/contribution-bos/filter", controller18.filterData);
 // router.post("/contribution-bos/get-filter-cols", controller18.getFilteringColumns) // get names of filtering columns
 // router.post("/contribution-bos/get-distinct-vals", controller18.getDistinctValues) // get the distinct values from filtering cols
 router.post("/contribution-bos/get-distinct-cols-vals", controller18.getFilteringColumnsWithDistinctValues);  //get distinct values from filter cols
+router.post("/contribution-bos/upload-file", upload.single('file'), controller18.uploadFile);
 
 const controller19 = new AllUsernamesController();
 

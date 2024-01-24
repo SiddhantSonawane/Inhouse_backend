@@ -123,28 +123,28 @@ removeSpecialAccessFields = catchAsyncErrors(async (req, res) => {
 
 //get entries of a user
 
-getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
-  try {
-    const { username } = req.query;
+// getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
+//   try {
+//     const { username } = req.query;
 
-    const entryCounts = await getEntryCountsOfUser(username);
+//     const entryCounts = await getEntryCountsOfUser(username);
 
-    const responseData = {
-      success: true,
-      data: {
-        Tables: entryCounts.reduce((acc, entry) => {
-          const tableName = Object.keys(entry)[0];
-          acc.push({ [tableName]: entry[tableName] });
-          return acc;
-        }, [])
-      }
-    };
+//     const responseData = {
+//       success: true,
+//       data: {
+//         Tables: entryCounts.reduce((acc, entry) => {
+//           const tableName = Object.keys(entry)[0];
+//           acc.push({ [tableName]: entry[tableName] });
+//           return acc;
+//         }, [])
+//       }
+//     };
 
-    res.json(responseData);
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+//     res.json(responseData);
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// });
 
 // get the count of rows/entries from table
 
@@ -175,7 +175,7 @@ getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
 
 getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
   try {
-    const { username } = req.query;
+    const { username } = req.body;
 
     const entryCounts = await getEntryCountsOfUser(username);
 

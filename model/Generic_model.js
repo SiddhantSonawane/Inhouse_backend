@@ -1,10 +1,18 @@
 import sql from '../config/db.js'
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const baseUploadPath = path.join(__dirname, "..", "Uploads");
 
 // Base model
 class BaseModel {
-  constructor(tableName, ID) {
+  constructor(tableName, ID, baseUploadPath) {
     this.tableName = tableName;
     this.ID = ID;
+    this.baseUploadPath = baseUploadPath
   }
 
   async getAll() {
@@ -75,6 +83,7 @@ class BaseModel {
   //filtering query
   async filterQuery(filters, orderBy, limit, Start_Year, End_Year, startDate, endDate, dateColumn) {
     let query = `SELECT * FROM ${this.tableName}`;
+    const queryParams = [];
   
     if (filters && Object.keys(filters).length > 0) {
       query += ' WHERE ';
@@ -83,8 +92,9 @@ class BaseModel {
         if(key == 'Username') {
           query += `USername like '%${filters[key]}%'`;
         }
-        else
-          query += `${key} = '${filters[key]}'`;
+        else{
+          query += `\`${key}\` = '${filters[key]}'`;
+        }
   
         if (index !== filterKeys.length - 1) {
           query += ' AND ';
@@ -121,8 +131,9 @@ class BaseModel {
     if (limit) {
       query += ` LIMIT ${limit} `;
     }
+    query+=';';
 
-    // console.log("Query found is : ", query);
+    console.log("Query found is : ", query);
 
     try {
       const result = await sql.query(query);
@@ -184,6 +195,70 @@ class BaseModel {
     console.log('query is: ', query);
     return await sql.query(query);
   }
+
+
+  //file upload functionality
+
+  async uploadFile(username, role, tableName, file) {
+    // Check and create folders if they don't exist
+    const uploadPath = this.getUploadPath(username, role, tableName);
+    this.createFoldersIfNotExist(uploadPath);
+    console.log("inside")
+    
+    const filename = `${file.originalname}`;
+    // console.log(filename)
+    const filePath = path.join(uploadPath, filename);
+
+    // Save file to local storage
+    fs.writeFileSync(filePath, file.buffer)
+    
+    // Save file information to the database
+    const insertQuery = `INSERT INTO uploads (user_id, file_name, file_path, created_at) VALUES (?, ?, ?, NOW())`;
+    await sql.query(insertQuery, [1,filename, filePath]);
+
+    return { filename, filePath };
+  }
+
+  getUploadPath(username, role, tableName) {
+    console.log('role is: ',role)
+    const baseUploadPath = this.baseUploadPath;
+    // const roleFolder = role === 1 ? 'Teacher_Uploads' : 'Student_Uploads';
+    let roleFolder = 'Admin_Uploads';
+
+    if(role == 1) roleFolder = 'Teacher_Uploads';
+    else roleFolder = 'Student_Uploads';
+
+    const userFolder = username;
+    const tableFolder = tableName;
+  
+    // Use process.cwd() to get the current working directory
+    // const currentDirPath = process.cwd();
+  
+    return path.join(baseUploadPath, roleFolder, tableFolder, userFolder);
+  }    
+
+  createFoldersIfNotExist(folderPath) {
+    try {
+      // Use synchronous stat to check if the folder exists
+      fs.statSync(folderPath);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        // ENOENT indicates that the folder doesn't exist
+        try {
+          // Use synchronous mkdir to create the folder
+          fs.mkdirSync(folderPath, { recursive: true });
+          console.log(`Folder created: ${folderPath}`);
+        } catch (mkdirError) {
+          console.error(`Error creating folder: ${mkdirError.message}`);
+          // Handle the error as needed, e.g., throw an exception or log a message
+        }
+      } else {
+        console.error(`Error checking folder existence: ${error.message}`);
+        // Handle the error as needed
+      }
+    }
+  }
+  
 
   // You can have more specific methods 
   // for each table in their respective models.

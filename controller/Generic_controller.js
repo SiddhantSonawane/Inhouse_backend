@@ -1,10 +1,19 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 
+import { promisify } from "util";
+import { mkdir, stat } from "fs";
+import path from "path";
+import { table } from "console";
+
+const mkdirAsync = promisify(mkdir);
+const statAsync = promisify(stat);
+
 // Generic Controller
 class GenericController {
-  constructor(Model,ID) {
+  constructor(Model,ID, baseUploadPath) {
     this.Model = Model;
     this.ID = ID;
+    this.baseUploadPath = baseUploadPath
   }
 
   getAll = async (req, res) => {
@@ -27,8 +36,8 @@ class GenericController {
   getByUsername = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const { username } = req.params;
-    // console.log("USERNAME IS : ", username);
-    const data = await modelInstance.getByUsername(username);
+    console.log("USERNAME IS : ", username);
+    const data = await modelInstance.getByUsername(username)
     res.json({ success: true, data: data[0] });
   });
 
@@ -158,6 +167,49 @@ class GenericController {
       res.status(500).json({ success: false, message: error.message });
     }
   });   
+
+
+  // upload file controller
+
+  // upload file controller
+  ensureDirectoryExists = async (directory) => {
+    try {
+      await statAsync(directory);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        await mkdirAsync(directory, { recursive: true });
+      } else {
+        throw error;
+      }
+    }
+  };
+
+  uploadFile = async (req, res) => {
+    try {
+      const modelInstance = new this.Model();
+      const { username, role, tableName } = req.query;
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({ success: false, message: 'File not provided' });
+      }
+      
+      // Ensure directory structure exists
+      
+      // console.log("first")
+      // const uploadPath = path.join(this.baseUploadPath, roleFolder, userFolder, tableFolder);
+      const { filePath } = await modelInstance.uploadFile(username, role, tableName, file)
+      // console.log("second")
+
+      // console.log('upload path designed ', filePath);
+
+      await this.ensureDirectoryExists(filePath);
+
+      res.json({ success: true, message: "File uploaded successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
 
   // basic func ends
 
