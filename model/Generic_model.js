@@ -213,11 +213,20 @@ class BaseModel {
     const existingFileQuery = `SELECT * FROM uploads WHERE user_id = ? AND role = ? AND file_name = ?`;
     const existingFiles = await sql.query(existingFileQuery, [1, role, filename]);
 
-    if (existingFiles && existingFiles.length > 0) {
+    console.log('len ', existingFiles[0].length)
+    const len = existingFiles[0].length;
+
+    // console.log('exixst ', existingFiles[0][0].file_name );
+
+    if(len > 0)
+    {
+      const existingfilename = existingFiles[0][0].file_name;
+      if (existingFiles[0].length > 0 && existingfilename == filename) {
         // File with the same name already exists, handle accordingly
         console.log("File with the same name already exists:", filename);
-        // You can throw an error, return a message, or handle it based on your requirements
+        //  throw an error, return a message
         throw new Error("File with the same name already exists");
+      }
     }
 
     // Save file to local storage
