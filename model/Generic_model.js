@@ -221,11 +221,14 @@ class BaseModel {
     if(len > 0)
     {
       const existingfilename = existingFiles[0][0].file_name;
+      const existingfilepath = existingFiles[0][0].file_path;
+      console.log('path is ', existingfilepath)
       if (existingFiles[0].length > 0 && existingfilename == filename) {
         // File with the same name already exists, handle accordingly
         console.log("File with the same name already exists:", filename);
         //  throw an error, return a message
-        throw new Error("File with the same name already exists");
+        return { filename: existingfilename, filePath: existingfilepath};
+        // throw new Error("File with the same name already exists");
       }
     }
 

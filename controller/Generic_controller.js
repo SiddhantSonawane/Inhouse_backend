@@ -232,8 +232,6 @@ class GenericController {
     }
   });
 
-
-
   // basic func ends
 
 }
