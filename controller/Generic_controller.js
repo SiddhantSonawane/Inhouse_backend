@@ -29,6 +29,7 @@ class GenericController {
   create = catchAsyncErrors(async (req, res) => {
     const modelInstance = new this.Model();
     const newData = req.body;
+    console.log("newData:",newData);
     const result = await modelInstance.create(newData);
     res.json({ success: true, data: result });
   });
@@ -187,7 +188,7 @@ class GenericController {
   uploadFile = async (req, res) => {
     try {
         const modelInstance = new this.Model();
-        const { username, role, tableName } = req.query;
+        const { username, role, tableName } = req.body;
         const file = req.file;
 
         const filename = `${file.originalname}`;
@@ -214,7 +215,7 @@ class GenericController {
         }
         // Display different messages based on whether it's a new or existing file
         else {
-          return res.json({ success: true, message: "File already exists", path: existingFile.filePath });
+          return res.json({ success: true, message: "File already exists", filePath: existingFile.filePath });
         } 
         
     } catch (error) {
