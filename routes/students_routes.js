@@ -30,7 +30,7 @@ router.post("/internship-details/upload-file", upload.single('file'), controller
 // Book Publications Routes
 const controller2 = new StudentResearchPublicationController();
 router.get("/research-pb/all", controller2.getAll);
-router.get("/reserach-pb/:username", controller2.getByUsername);
+router.get("/research-pb/:username", controller2.getByUsername);
 router.post("/research-pb/create-new", controller2.create);
 router.delete("/research-pb/remove", controller2.deleteByUsername);
 router.put("/research-pb/update", controller2.updateByUsername);

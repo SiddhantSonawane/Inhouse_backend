@@ -51,7 +51,7 @@ class BaseModel {
 
     for (const key in updatedFields) {
       if (Object.prototype.hasOwnProperty.call(updatedFields, key)) {
-        setFields.push(`${key} = ?`);
+        setFields.push(\${key}\` = ?`);
         setValues.push(updatedFields[key]);
       }
     }
@@ -60,11 +60,12 @@ class BaseModel {
       ", "
     )} WHERE Username = ? and ${this.ID} = ?`;
     setValues.push(username, ID);
-
+    console.log('Executing update query:', query, setValues);
     try {
       const result = await sql.query(query, setValues);
       return result;
     } catch (error) {
+      console.error(`Error executing query: ${query}, error`);
       throw new Error(`Error updating data: ${error.message}`);
     }
   }
