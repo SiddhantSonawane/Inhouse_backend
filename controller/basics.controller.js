@@ -225,10 +225,10 @@ getNotices = catchAsyncErrors(async (req, res) => {
 
   try {
 
-    const { Role } = req.body;
+    const { Role, Username } = req.body;
     console.log("Get notices hit with Role = ", Role)
 
-    const data = await getAllNotices(Role);
+    const data = await getAllNotices(Role, Username);
     console.log("data is : ", data)
 
     res.status(200).json({success: true, data: data});
@@ -242,9 +242,9 @@ addNotices = catchAsyncErrors(async (req, res) => {
 
   try {
     
-    const {Username, Title, Description, Role, date } = req.body;
-    const data = await addNotices({ Username, Title, Description, Role, date });
-    const response = await getAllNotices(Role);
+    const {Username, Title, Description, Role, date, Receiver } = req.body;
+    const data = await addNotices({ Username, Title, Description, Role, date, Receiver });
+    const response = await getAllNotices(Role, Username);
 
     res.status(200).json({success: true, data: response})
 
