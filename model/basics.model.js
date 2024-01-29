@@ -190,18 +190,17 @@ export async function getEntryCountsOfTable(tableName) {
   }
 }
 
-
-export async function getAllNotices(Role) {
+export async function getAllNotices(Role, Username) {
 
   console.log("Get notices model hit with Role = ", Role)
   var query = "";
-  if(Role == 1 || Role == 2)
+  if(Role == 1)
   {
-    query = `SELECT * from notices where Role = 0`;
+    query = `SELECT * from notices where Role = 0 and (Receiver = ${Username} or Receiver = 'All')`;
   }
   else
   {
-    query = `SELECT * from notices where Role != 0`;
+    query = `SELECT * from notices where Receiver = ${Username}`;
   }
   console.log("Query is = ", query)
 
@@ -212,7 +211,7 @@ export async function getAllNotices(Role) {
 
 export async function addNotices(notice) {
   
-  const { Username, Title, Description, Role} = notice;
-  await sql.query("INSERT INTO notices (Username, Title, Description, Role, DateTime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())", [Username, Title, Description, Role]);
+  const { Username, Title, Description, Role, Receiver} = notice;
+  await sql.query("INSERT INTO notices (Username, Title, Description, Role, DateTime, Receiver) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP(), ?)", [Username, Title, Description, Role, Receiver]);
   
 }
