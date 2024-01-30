@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { login, register, verify, checkRegistration, getAllStudent, getAllTeacher } from '../controller/loginRegister_controller.js';
+import { login, register, verify, checkRegistration, getAllStudent, getAllTeacher, forgotPasswordController, resetPasswordController } from '../controller/loginRegister_controller.js';
 
 // const login = require("../../controllers/register.js")
 // const register = require("../../controllers/register.js");
@@ -20,5 +20,9 @@ router.post('/login', login);
 router.get('/getAllStudent', getAllStudent);
 
 router.get('/getAllTeacher', getAllTeacher);
+
+router.post('/forgot-password', forgotPasswordController);
+
+router.post('/reset-password', resetPasswordController);
 
 export default router
