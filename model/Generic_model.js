@@ -51,7 +51,7 @@ class BaseModel {
 
     for (const key in updatedFields) {
       if (Object.prototype.hasOwnProperty.call(updatedFields, key)) {
-        setFields.push(\${key}\` = ?`);
+        setFields.push(`\`${key}\` = ?`);
         setValues.push(updatedFields[key]);
       }
     }
