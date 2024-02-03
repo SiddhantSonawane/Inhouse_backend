@@ -1,28 +1,38 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import sql from '../config/db.js';
+
 import { 
     getAllTablesModel ,
-    getAllColumnsModel,
     getDataForUserModel,
-    getFilteringColumnsModel
+    getAllColumns,
+    updateSpecialAccess,
+    updateSpecialAccessFields,
+    getSpecialAccessTables,
+    removeSpecialAccessFields, 
+    getEntryCountsOfUser,
+    getTableNames,
+    getEntryCountsOfTable,
+    getAllNotices,
+    addNotices
 } from "../model/basics.model.js";
 
 class BasicController {
-    
-  getAllColumns = catchAsyncErrors(async (req, res) => {
-    try {
-      const {tablename} = req.query;
-      console.log("Received request with parameters:", req.query);
 
-      const data = await getAllColumnsModel(tablename);
+  getAllTables = catchAsyncErrors(async (req, res) => {
+    try {
+      const data = await getAllTablesModel();
       res.json({ success: true, data: data[0] });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   });
 
-  getAllTables = catchAsyncErrors(async (req, res) => {
+  getAllColumns = catchAsyncErrors(async (req, res) => {
     try {
-      const data = await getAllTablesModel();
+      const {tablename} = req.query;
+      console.log("Received request with parameters:", req.query);
+
+      const data = await getAllColumns(tablename);
       res.json({ success: true, data: data[0] });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -52,21 +62,197 @@ class BasicController {
     }
   });
 
-  //get the names/list of selected filtering columns for a specific table
-
-  getFilteringColumns = catchAsyncErrors(async (req, res) => {
+  updateAccess = catchAsyncErrors(async (req, res) => {
     try {
-      const { tablename } = req.query;
-      const filtering_columns = await getFilteringColumnsModel(tablename);
-      res.json({ success: true, data: { filtering_columns } });
-      // console.log("data[0] is : ",data[0]);
+      
+      // console.log("Update api hit")
+      const { Email, SpecialAccess } = req.query;
+      const data = await updateSpecialAccess(Email, SpecialAccess);
+      // console.log("Response is : ", res)
+      res.status(200).send({success: true, data: data})
+      
+    } catch (error) {
+      res.status(500).json({success: false, message: error.message});
+    }
+  });
 
-      // res.json({ success: true, data: data[0] });
+  updateSpecialAccessFields = catchAsyncErrors(async (req, res) => {
+    try {
+      const { username, studentTables, teacherTables } = req.body;
+
+      const data = await updateSpecialAccessFields(username, studentTables, teacherTables);
+
+      res.json({ success: true, message: "Special access updated successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   });
 
-}
+  getSpecialAccessTables = catchAsyncErrors(async (req, res) => {
+    try {
+        const { username } = req.query;
 
+        const data = await getSpecialAccessTables(username);
+
+        const combinedData = data[0].reduce((accumulator, { SpecialAccess_Student, SpecialAccess_Teacher }) => {
+            accumulator.SpecialAccess_Student = (accumulator.SpecialAccess_Student || []).concat(SpecialAccess_Student.split(',').filter(Boolean));
+            accumulator.SpecialAccess_Teacher = (accumulator.SpecialAccess_Teacher || []).concat(SpecialAccess_Teacher.split(',').filter(Boolean));
+            return accumulator;
+        }, {});
+
+        res.status(200).send({ success: true, data: combinedData });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// remove any table from special access of a user 
+
+removeSpecialAccessFields = catchAsyncErrors(async (req, res) => {
+  try {
+    const { username, studentTables, teacherTables } = req.body;
+
+    const data = await removeSpecialAccessFields(username, studentTables, teacherTables);
+
+    res.json({ success: true, message: "Special access updated successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+//get entries of a user
+
+// getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
+//   try {
+//     const { username } = req.query;
+
+//     const entryCounts = await getEntryCountsOfUser(username);
+
+//     const responseData = {
+//       success: true,
+//       data: {
+//         Tables: entryCounts.reduce((acc, entry) => {
+//           const tableName = Object.keys(entry)[0];
+//           acc.push({ [tableName]: entry[tableName] });
+//           return acc;
+//         }, [])
+//       }
+//     };
+
+//     res.json(responseData);
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// });
+
+// get the count of rows/entries from table
+
+getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
+  try {
+    // Fetch table names from the alltables_stud_fact table
+    const { studentTables, teacherTables } = await getTableNames();
+
+    // Fetch entry counts for student tables
+    const studentEntryCounts = await Promise.all(studentTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    // Fetch entry counts for teacher tables
+    const teacherEntryCounts = await Promise.all(teacherTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    res.json({ success: true, data: { Student_Tables: studentEntryCounts, Teacher_Tables: teacherEntryCounts } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+//get entries of a user
+
+getEntryCountsOfUser = catchAsyncErrors(async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const entryCounts = await getEntryCountsOfUser(username);
+
+    const responseData = {
+      success: true,
+      data: {
+        Tables: entryCounts.reduce((acc, entry) => {
+          const tableName = Object.keys(entry)[0];
+          acc.push({ [tableName]: entry[tableName] });
+          return acc;
+        }, [])
+      }
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// get the count of rows/entries from table
+
+getEntryCountsAPI = catchAsyncErrors(async (req, res) => {
+  try {
+    // Fetch table names from the alltables_stud_fact table
+    const { studentTables, teacherTables } = await getTableNames();
+
+    // Fetch entry counts for student tables
+    const studentEntryCounts = await Promise.all(studentTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    // Fetch entry counts for teacher tables
+    const teacherEntryCounts = await Promise.all(teacherTables.map(async (tableName) => {
+      const entryCount = await getEntryCountsOfTable(tableName);
+      return { [tableName]: entryCount };
+    }));
+
+    res.json({ success: true, data: { Student_Tables: studentEntryCounts, Teacher_Tables: teacherEntryCounts } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+getNotices = catchAsyncErrors(async (req, res) => {
+
+  try {
+
+    const { Role, Username } = req.body;
+    console.log("Get notices hit with Role = ", Role)
+
+    const data = await getAllNotices(Role, Username);
+    console.log("data is : ", data)
+
+    res.status(200).json({success: true, data: data});
+
+  } catch(error) {
+    res.status(500).json({success: false, message: error.message})
+  }
+})
+
+addNotices = catchAsyncErrors(async (req, res) => {
+
+  try {
+    
+    const {Username, Title, Description, Role, date, Receiver } = req.body;
+    const data = await addNotices({ Username, Title, Description, Role, date, Receiver });
+    const response = await getAllNotices(Role, Username);
+
+    res.status(200).json({success: true, data: response})
+
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message});
+  }
+})
+
+};
+  
 export default BasicController;
